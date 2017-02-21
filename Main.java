@@ -18,8 +18,12 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
+	public static ArrayList<String> ladder;
+	public static ArrayList<String> visited;
+	public static String startWord, endWord;
+	public static boolean isLadder;
 	
-	// static variables and constants only here.
+	static Neighbors neighbors;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -30,19 +34,29 @@ public class Main {
 			kb = new Scanner(new File(args[0]));
 			ps = new PrintStream(new File(args[1]));
 			System.setOut(ps);			// redirect output to ps
-		} else {
+		} 
+		else {
 			kb = new Scanner(System.in);// default from Stdin
 			ps = System.out;			// default to Stdout
 		}
 		initialize();
-		
-		// TODO methods to read in words, output ladder
+		ladder=parse(kb);
+		while (!ladder.isEmpty()){
+			ArrayList<String> ladderDFS = getWordLadderDFS(ladder.get(0),ladder.get(2));
+			ArrayList<String> ladderBFS = getWordLadderBFS(ladder.get(0),ladder.get(2));
+			
+            printLadder(ladderDFS);
+            printLadder(ladderBFS);
+			ladder = parse(kb);
+		}
 	}
 	
 	public static void initialize() {
 		// initialize your static variables or constants here.
 		// We will call this method before running our JUNIT tests.  So call it 
 		// only once at the start of main.
+		isLadder=false;
+		neighbors=new Neighbors();
 	}
 	
 	/**
@@ -51,28 +65,87 @@ public class Main {
 	 * If command is /quit, return empty ArrayList. 
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
-		// TO DO
-		return null;
+		ArrayList<String> parseLadder=new ArrayList<String>();
+		String word=keyboard.next();
+		if(word.equals("/quit")){
+			return parseLadder;
+		}
+		else{
+			parseLadder.add(word);
+			parseLadder.add("0");
+			parseLadder.add(keyboard.next());
+		}
+		return parseLadder;
 	}
 	
-	public static ArrayList<String> getWordLadderDFS(String start, String end) {
-		
+	public static ArrayList<String> getWordLadderDFS(String start, String end) {		
 		// Returned list should be ordered start to end.  Include start and end.
-		// If ladder is empty, return list with just start and end.
+		// Return empty list if no ladder.
 		// TODO some code
 		Set<String> dict = makeDictionary();
 		// TODO more code
+		startWord = start.toUpperCase();
+		endWord = end.toUpperCase();
+		
+		neighbors.getNeighbors(start, dict, visited);
+		
 		
 		return null; // replace this line later with real return
 	}
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		
-		// TODO some code
+		ArrayList<String> result=new ArrayList<String>();
+    	Queue<String> frontier=new LinkedList<String>();
+		ArrayList<String> wordList=new ArrayList<String>();
 		Set<String> dict = makeDictionary();
-		// TODO more code
+		ArrayList<String> black=new ArrayList<String>();
+		String nextWord;
+		startWord=start.toUpperCase();
+		endWord=end.toUpperCase();
 		
-		return null; // replace this line later with real return
+		frontier.add(startWord);
+		while(frontier.size()!=0){
+			nextWord=frontier.element();
+			if(nextWord.equals(end)){
+				return result;
+			}
+			wordList=checkDictBFS(nextWord,endWord,wordList);
+				for(int j=0;j<wordList.size();j++){
+					String word=wordList.get(j);
+					if(dict.contains(word)&&(!frontier.contains(word))&&(!black.contains(word))){
+						if(word.equals(endWord)){
+							black.add(frontier.remove());
+							String last=word;
+							result.add(last);
+							while(!last.equals(startWord)){
+								if((neighbors.isNeighbor(last, black.get(black.size()-1)))&&(!result.contains(black.get(black.size()-1)))){
+									last=black.remove(black.size()-1);
+									result.add(0,last);
+								}
+								else{
+									black.remove(black.size()-1);
+								}
+							}
+							for(int k=result.size()-1;k>1;k--){
+								for(int l=0;l<k-1;l++){
+									if(neighbors.isNeighbor(result.get(l), result.get(k))){
+										for(int count=l+1;count<k;count++){
+											result.remove(l+1);
+										}
+										k=result.size()-1;
+										l=0;
+									}
+								}
+							}
+							return result;
+						}
+						frontier.add(word);
+					}
+				}
+				black.add(frontier.remove());
+				wordList.clear();
+		}
+		return result;
 	}
     
 	public static Set<String>  makeDictionary () {
@@ -92,8 +165,34 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		
+		if (ladder.isEmpty()) {
+            System.out.println("no word ladder can be found between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
+            return;
+        }
+        
+
+		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
+        for (int i = 0; i < ladder.size(); i++) {
+            System.out.println(ladder.get(i).toLowerCase());
+        }
+        return;
 	}
-	// TODO
-	// Other private static methods here
+	private static ArrayList<String> checkDictBFS(String newWord,String end,ArrayList<String> wordList){	
+		for(int i=0;i<newWord.length();i++){
+				for(char letter='A';letter<='Z';letter++){
+					if(newWord.charAt(i)==letter){
+						letter++;
+					}
+					else{
+						String tempWord=newWord.substring(0, i)+letter+newWord.substring(i+1);
+/*						if(tempWord.equals(end)){
+							isLadder=true;
+						}
+						else*/
+						wordList.add(tempWord);
+					}
+				}
+			}
+		return wordList;
+	}
 }
