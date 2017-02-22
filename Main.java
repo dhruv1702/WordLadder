@@ -1,10 +1,11 @@
 /* WORD LADDER Main.java
  * EE422C Project 3 submission by
- * Dhruv Verma
- * dv7229
- * 16230
- * Daniel Laveman
- * DEL824
+ * Replace <...> with your actual data.
+ * <Student1 Name>
+ * <Student1 EID>
+ * <Student1 5-digit Unique No.>
+ * <Student2 Name>
+ * <Student2 EID>
  * <Student2 5-digit Unique No.>
  * Slip days used: <0>
  * Git URL:
@@ -72,13 +73,14 @@ public class Main {
 	public static ArrayList<String> parse(Scanner keyboard) {
 		ArrayList<String> parseLadder=new ArrayList<String>();
 		String word = keyboard.next();
-		if(word.equals("/quit")){
+		String next= keyboard.next();
+		if(word.equals("/quit")||next.equals("/quit")){
 			return parseLadder;
 		}
 		else{
 			parseLadder.add(word);
-			parseLadder.add("2");
-			parseLadder.add(keyboard.next());
+			parseLadder.add("0");
+			parseLadder.add(next);
 		}
 		return parseLadder;
 	}
@@ -209,6 +211,8 @@ public class Main {
 				black.add(frontier.remove());
 				wordList.clear();
 		}
+		result.add(startWord);
+		result.add(endWord);
 		return result;
 	}
     
@@ -229,12 +233,11 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		if (/*ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord)*/ladder.isEmpty()) {
+		if ((ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord))||(ladder.isEmpty())) {
             System.out.println("no word ladder can be found between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
             return;
         }
         
-
 		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
         for (int i = 0; i < ladder.size(); i++) {
             System.out.println(ladder.get(i).toLowerCase());
