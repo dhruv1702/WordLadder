@@ -1,11 +1,10 @@
 /* WORD LADDER Main.java
  * EE422C Project 3 submission by
- * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
+ * Dhruv Verma
+ * dv7229
+ * 16230
+ * Daniel Laveman
+ * DEL824
  * <Student2 5-digit Unique No.>
  * Slip days used: <0>
  * Git URL:
@@ -233,11 +232,12 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		if ((ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord))||(ladder.isEmpty())) {
+		if (ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord)||ladder.isEmpty()) {
             System.out.println("no word ladder can be found between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
             return;
         }
         
+
 		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
         for (int i = 0; i < ladder.size(); i++) {
             System.out.println(ladder.get(i).toLowerCase());
