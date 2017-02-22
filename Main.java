@@ -44,12 +44,13 @@ public class Main {
 		initialize();
 		ladder = parse(kb);
 		
+		
 		while (!ladder.isEmpty()){
 			ArrayList<String> ladderDFS = getWordLadderDFS(ladder.get(0),ladder.get(2));
-		//	ArrayList<String> ladderBFS = getWordLadderBFS(ladder.get(0),ladder.get(2));
+			ArrayList<String> ladderBFS = getWordLadderBFS(ladder.get(0),ladder.get(2));
 			
             printLadder(ladderDFS);
-           // printLadder(ladderBFS);
+            printLadder(ladderBFS);
 			ladder = parse(kb);
 		}
 	}
@@ -59,6 +60,7 @@ public class Main {
 		// We will call this method before running our JUNIT tests.  So call it 
 		// only once at the start of main.
 		neighbors = new Neighbors();
+		visited = new ArrayList<String>();
 		levelsDFS = 0;
 	}
 	
@@ -109,13 +111,15 @@ public class Main {
 				startWord = start;
 				endWord = end;
 				ArrayList<String> emptyArray = new ArrayList<String>();
+				emptyArray.add(startWord);
+				emptyArray.add(endWord);
+
 				return emptyArray;
 			}
 			return null;
 		}
 		
 		visited.add(start);
-		
 		ArrayList<String> path = new ArrayList<String>();
 		for (String eachWord : neighborsList) {
 			levelsDFS++;
@@ -127,27 +131,27 @@ public class Main {
 				continue;
 			}
 		}
-		
 		if (path == null) {
-			if (levelsDFS == 0) {
+			if (depth == 0) {
 				startWord = start;
 				endWord = end;
 				ArrayList<String> emptyArray = new ArrayList<String>();
+				emptyArray.add(startWord);
+				emptyArray.add(endWord);
 				return emptyArray;
 			}
 			return null;
 		}
-		
 		path.add(start);
 		if (levelsDFS == 0) {
 			startWord = start;
 			endWord = path.get(0);
-			visited.clear();
 			Collections.reverse(path);
+			visited.clear();
 		}
 		return path;
     }
-	
+    
 	
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
@@ -223,7 +227,7 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		if (ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord)) {
+		if (/*ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord)*/ladder.isEmpty()) {
             System.out.println("no word ladder can be found between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
             return;
         }
