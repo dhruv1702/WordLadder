@@ -6,8 +6,8 @@
  * Daniel Laveman
  * DEL824
  * <Student2 5-digit Unique No.>
- * Slip days used: <0>
- * Git URL:
+ * Slip days used: 1
+ * Git URL: https://github.com/dhruv1702/WordLadder
  * Spring 2017
  */
 
@@ -71,15 +71,15 @@ public class Main {
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
 		ArrayList<String> parseLadder=new ArrayList<String>();
-		String word = keyboard.next();
-		String next= keyboard.next();
-		if(word.equals("/quit")||next.equals("/quit")){
+		String in = keyboard.next();
+		String out = keyboard.next();
+		if(in.equals("/quit") || out.equals("/quit")){
 			return parseLadder;
 		}
 		else{
-			parseLadder.add(word);
+			parseLadder.add(in);
 			parseLadder.add("0");
-			parseLadder.add(next);
+			parseLadder.add(out);
 		}
 		return parseLadder;
 	}
@@ -91,7 +91,9 @@ public class Main {
 		Set<String> dict = makeDictionary();
 		ArrayList<String> neighborsList = new ArrayList<String>();
 		neighborsList = neighbors.findNeighbors(start, dict, visited);
-		
+/*		if ((levelsDFS) >= 20){
+			return null;
+		}*/
 		// base case (end adjacent to calling word)
 		if (neighborsList.contains(end)) {
 			ArrayList<String> finalPath = new ArrayList<String>();
@@ -232,7 +234,7 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		if (ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord)||ladder.isEmpty()) {
+		if ((ladder.get(0).equals(startWord) && ladder.get(1).equals(endWord)) || ladder.isEmpty()) {
             System.out.println("no word ladder can be found between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
             return;
         }

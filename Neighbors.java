@@ -2,12 +2,12 @@
  * EE422C Project 3 submission by
  * Dhruv Verma
  * dv7229
- * <Student1 5-digit Unique No.>
+ * 16230
  * Daniel Laveman
- * <Student2 EID>
+ * DEL824
  * <Student2 5-digit Unique No.>
  * Slip days used: <0>
- * Git URL:
+ * Git URL: https://github.com/dhruv1702/WordLadder
  * Spring 2017
  */
 
@@ -47,7 +47,7 @@ public class Neighbors {
 	
 	
 	/**
-	 * returns ArrayList of all words from dict that are one character apart from start
+	 * returns ArrayList of all words from dict that are one character apart from start (removes words that change the same char as start)
 	 * @param start
 	 * @param dict
 	 * @param visited
@@ -79,7 +79,7 @@ public class Neighbors {
 			int indexChanged = 0;
 			for (int i = 0; i < lastVisited.length(); i++){
 				if(start.charAt(i) != lastVisited.charAt(i)){
-					indexChanged += i;
+					indexChanged = i;
 				}
 			}
 			
