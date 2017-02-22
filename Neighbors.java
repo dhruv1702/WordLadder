@@ -1,3 +1,17 @@
+/* WORD LADDER Main.java
+ * EE422C Project 3 submission by
+ * Dhruv Verma
+ * dv7229
+ * <Student1 5-digit Unique No.>
+ * Daniel Laveman
+ * <Student2 EID>
+ * <Student2 5-digit Unique No.>
+ * Slip days used: <0>
+ * Git URL:
+ * Spring 2017
+ */
+
+
 package assignment3;
 
 import java.util.ArrayList;
@@ -59,7 +73,26 @@ public class Neighbors {
 				neighborList.add(s);
 			}
 		}
+		
+		if(!visited.isEmpty()){
+			String lastVisited = visited.get(visited.size()-1);
+			int indexChanged = 0;
+			for (int i = 0; i < lastVisited.length(); i++){
+				if(start.charAt(i) != lastVisited.charAt(i)){
+					indexChanged += i;
+				}
+			}
+			
+			ArrayList<String> toRemove = new ArrayList<String>();
+			for (String all: neighborList){
+				if (all.charAt(indexChanged) != start.charAt(indexChanged)){
+					toRemove.add(all);
+				}
+			}
+			neighborList.removeAll(toRemove);
+		}
 		return neighborList;
+
 	}
 	
 }
