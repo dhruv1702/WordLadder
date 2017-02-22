@@ -82,81 +82,6 @@ public class Main {
 		return parseLadder;
 	}
 	
-	/*public static ArrayList<String> getWordLadderDFS(String start, String end) {
-		
-		// Returned list should be ordered start to end.  Include start and end.
-		// TODO some code
-		Set<String> dict = makeDictionary();
-		// TODO more code
-		start = start.toUpperCase();
-		end = end.toUpperCase();
-		
-		ArrayList<String> neighborsList = new ArrayList<String>();
-		neighborsList = neighbors.findNeighbors(start, dict, visited);
-		
-		//base case (end adjacent to calling word)
-		if (neighborsList.contains(endWord)){
-			ArrayList<String> finalPath = new ArrayList<String>();
-			finalPath.add(end);
-			finalPath.add(start);
-			if (levelsDFS == 0){
-				Collections.reverse(finalPath);
-				return finalPath;
-			}
-		}
-		
-		if(neighborsList.isEmpty()){
-			if (levelsDFS == 0){
-				ArrayList<String> emptyArray = new ArrayList<String>();
-				emptyArray.add(start);
-				emptyArray.add(end);
-				return emptyArray;
-			}
-			return null;
-		}
-		
-		visited.add(start);
-		ArrayList<String> path = new ArrayList<String>();
-		for(String eachWord: neighborsList){
-			levelsDFS++;
-			path = getWordLadderDFS(eachWord, endWord);
-			levelsDFS--;
-			if (path == null){
-				visited.add(eachWord);
-				continue;
-
-			}
-			else { // Found a working path
-				break;
-			}
-		}
-		
-		
-		if (path == null) {
-			if (levelsDFS == 0) {
-				startWord = start;
-				endWord = end;
-				ArrayList<String> emptyArray = new ArrayList<String>();
-				return emptyArray;
-			}
-			return null;
-		}
-
-		
-		path.add(start);
-		if (levelsDFS == 0) { // Finished ladder
-			startWord = start;
-			endWord = path.get(0);
-			visited.clear();
-			Collections.reverse(path);
-		}
-		return path;	
-		
-	}*/
-		
-	
-	
-	
 
     public static ArrayList<String> getWordLadderDFS(String start, String end) {
     	start = start.toUpperCase();
@@ -201,9 +126,6 @@ public class Main {
 				visited.add(eachWord);
 				continue;
 			}
-			else { // Found a working path
-				break;
-			}
 		}
 		
 		if (path == null) {
@@ -229,12 +151,59 @@ public class Main {
 	
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		
-		// TODO some code
+
+		ArrayList<String> result=new ArrayList<String>();
+    	Queue<String> frontier=new LinkedList<String>();
+		ArrayList<String> wordList=new ArrayList<String>();
 		Set<String> dict = makeDictionary();
-		// TODO more code
+		ArrayList<String> black=new ArrayList<String>();
+		String nextWord;
+		startWord=start.toUpperCase();
+		endWord=end.toUpperCase();
 		
-		return null; // replace this line later with real return
+		frontier.add(startWord);
+		while(frontier.size()!=0){
+			nextWord=frontier.element();
+			if(nextWord.equals(end)){
+				return result;
+			}
+			wordList=checkDictBFS(nextWord,endWord,wordList);
+				for(int j=0;j<wordList.size();j++){
+					String word=wordList.get(j);
+					if(dict.contains(word)&&(!frontier.contains(word))&&(!black.contains(word))){
+						if(word.equals(endWord)){
+							black.add(frontier.remove());
+							String last=word;
+							result.add(last);
+							while(!last.equals(startWord)){
+								if((neighbors.isNeighbor(last, black.get(black.size()-1)))&&(!result.contains(black.get(black.size()-1)))){
+									last=black.remove(black.size()-1);
+									result.add(0,last);
+								}
+								else{
+									black.remove(black.size()-1);
+								}
+							}
+							for(int k=result.size()-1;k>1;k--){
+								for(int l=0;l<k-1;l++){
+									if(neighbors.isNeighbor(result.get(l), result.get(k))){
+										for(int count=l+1;count<k;count++){
+											result.remove(l+1);
+										}
+										k=result.size()-1;
+										l=0;
+									}
+								}
+							}
+							return result;
+						}
+						frontier.add(word);
+					}
+				}
+				black.add(frontier.remove());
+				wordList.clear();
+		}
+		return result;
 	}
     
 	public static Set<String>  makeDictionary () {
