@@ -18,7 +18,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	public static int levelsDFS, depth;
+	public static int levelsDFS;
 	public static ArrayList<String> ladder;
 	//public static ArrayList<String> finalPath;
 	public static ArrayList<String> visited;
@@ -130,9 +130,12 @@ public class Main {
 				visited.add(eachWord);
 				continue;
 			}
+			else{
+				break;
+			}
 		}
 		if (path == null) {
-			if (depth == 0) {
+			if (levelsDFS == 0) {
 				startWord = start;
 				endWord = end;
 				ArrayList<String> emptyArray = new ArrayList<String>();
