@@ -18,9 +18,9 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	public static int levelsDFS;
+	public static int levelsDFS, depth;
 	public static ArrayList<String> ladder;
-	public static ArrayList<String> finalPath;
+	//public static ArrayList<String> finalPath;
 	public static ArrayList<String> visited;
 	public static String startWord, endWord;
 	
@@ -82,22 +82,23 @@ public class Main {
 		return parseLadder;
 	}
 	
-	public static ArrayList<String> getWordLadderDFS(String start, String end) {
+	/*public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
 		// Returned list should be ordered start to end.  Include start and end.
 		// TODO some code
 		Set<String> dict = makeDictionary();
 		// TODO more code
-		startWord = start.toUpperCase();
-		endWord = end.toUpperCase();
+		start = start.toUpperCase();
+		end = end.toUpperCase();
 		
 		ArrayList<String> neighborsList = new ArrayList<String>();
-		neighborsList = neighbors.findNeighbors(startWord, dict, visited);
+		neighborsList = neighbors.findNeighbors(start, dict, visited);
 		
 		//base case (end adjacent to calling word)
 		if (neighborsList.contains(endWord)){
-			finalPath.add(endWord);
-			finalPath.add(startWord);
+			ArrayList<String> finalPath = new ArrayList<String>();
+			finalPath.add(end);
+			finalPath.add(start);
 			if (levelsDFS == 0){
 				Collections.reverse(finalPath);
 				return finalPath;
@@ -106,14 +107,15 @@ public class Main {
 		
 		if(neighborsList.isEmpty()){
 			if (levelsDFS == 0){
-				finalPath.add(startWord);
-				finalPath.add(endWord);
-				return finalPath;
+				ArrayList<String> emptyArray = new ArrayList<String>();
+				emptyArray.add(start);
+				emptyArray.add(end);
+				return emptyArray;
 			}
 			return null;
 		}
 		
-		visited.add(startWord);
+		visited.add(start);
 		ArrayList<String> path = new ArrayList<String>();
 		for(String eachWord: neighborsList){
 			levelsDFS++;
@@ -121,12 +123,25 @@ public class Main {
 			levelsDFS--;
 			if (path == null){
 				visited.add(eachWord);
+				continue;
 
 			}
-/*			else { // Found a working path
+			else { // Found a working path
 				break;
-			}*/
+			}
 		}
+		
+		
+		if (path == null) {
+			if (levelsDFS == 0) {
+				startWord = start;
+				endWord = end;
+				ArrayList<String> emptyArray = new ArrayList<String>();
+				return emptyArray;
+			}
+			return null;
+		}
+
 		
 		path.add(start);
 		if (levelsDFS == 0) { // Finished ladder
@@ -137,9 +152,79 @@ public class Main {
 		}
 		return path;	
 		
-	}
+	}*/
 		
+	
+	
+	
+
+    public static ArrayList<String> getWordLadderDFS(String start, String end) {
+    	start = start.toUpperCase();
+		end = end.toUpperCase();
+		Set<String> dict = makeDictionary();
+		ArrayList<String> neighborsList = new ArrayList<String>();
+		neighborsList = neighbors.findNeighbors(start, dict, visited);
 		
+		// base case (end adjacent to calling word)
+		if (neighborsList.contains(end)) {
+			ArrayList<String> finalPath = new ArrayList<String>();
+			finalPath.add(end);
+			finalPath.add(start);
+			if (levelsDFS == 0) {
+				startWord = start;
+				endWord = finalPath.get(0);
+				Collections.reverse(finalPath);
+			}
+			return finalPath;
+		}
+		
+		// no path
+		if (neighborsList.isEmpty()) {
+			if (levelsDFS == 0) {
+				startWord = start;
+				endWord = end;
+				ArrayList<String> emptyArray = new ArrayList<String>();
+				return emptyArray;
+			}
+			return null;
+		}
+		
+		visited.add(start);
+		
+		ArrayList<String> path = new ArrayList<String>();
+		for (String eachWord : neighborsList) {
+			levelsDFS++;
+			path = getWordLadderDFS(eachWord, end);
+			levelsDFS--;
+			
+			if (path == null) {
+				visited.add(eachWord);
+				continue;
+			}
+			else { // Found a working path
+				break;
+			}
+		}
+		
+		if (path == null) {
+			if (levelsDFS == 0) {
+				startWord = start;
+				endWord = end;
+				ArrayList<String> emptyArray = new ArrayList<String>();
+				return emptyArray;
+			}
+			return null;
+		}
+		
+		path.add(start);
+		if (levelsDFS == 0) {
+			startWord = start;
+			endWord = path.get(0);
+			visited.clear();
+			Collections.reverse(path);
+		}
+		return path;
+    }
 	
 	
 	
@@ -183,4 +268,19 @@ public class Main {
 	}
 	// TODO
 	// Other private static methods here
+	
+	private static ArrayList<String> checkDictBFS(String newWord,String end,ArrayList<String> wordList){	
+		 for(int i=0;i<newWord.length();i++){
+				for(char letter='A';letter<='Z';letter++){
+					if(newWord.charAt(i)==letter){
+						letter++;
+		 			}
+					else{
+						String tempWord=newWord.substring(0, i)+letter+newWord.substring(i+1);
+	 					wordList.add(tempWord);
+					}
+				}
+		 }
+		 return wordList;
+	}
 }

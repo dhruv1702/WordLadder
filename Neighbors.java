@@ -39,15 +39,27 @@ public class Neighbors {
 	 * @param visited
 	 * @return
 	 */
-	public ArrayList<String> getNeighbors(String start, Set<String> dict, ArrayList<String> visited){
-		ArrayList<String> neighbors = new ArrayList<String>();
-		for (String s: dict){
-			if(isNeighbor(start,s) && !visited.contains(s)) {
-				neighbors.add(s);
+	public ArrayList<String> findNeighbors(String start, Set<String> dict, ArrayList<String> visited){
+		ArrayList<String> wordList = new ArrayList<String>();
+		 for (int i=0;i<start.length();i++){
+				for (char letter = 'A'; letter <= 'Z'; letter++){
+					if (start.charAt(i) == letter){
+						letter++;
+		 			}
+					else{
+						String tempWord = start.substring(0, i) + letter + start.substring(i+1);
+	 					wordList.add(tempWord);
+					}
+				}
+		 }
+
+		ArrayList<String> neighborList = new ArrayList<String>();
+		for (String s: wordList){
+			if(dict.contains(s) && !visited.contains(s)) {
+				neighborList.add(s);
 			}
 		}
-	
-		return neighbors;
+		return neighborList;
 	}
 	
 }
