@@ -5,7 +5,7 @@
  * 16230
  * Daniel Laveman
  * DEL824
- * <Student2 5-digit Unique No.>
+ * 16230
  * Slip days used: 1
  * Git URL: https://github.com/dhruv1702/WordLadder
  * Spring 2017
@@ -72,8 +72,11 @@ public class Main {
 	public static ArrayList<String> parse(Scanner keyboard) {
 		ArrayList<String> parseLadder=new ArrayList<String>();
 		String in = keyboard.next();
+		if(in.equals("/quit")){
+			return parseLadder;
+		}
 		String out = keyboard.next();
-		if(in.equals("/quit") || out.equals("/quit")){
+		if(out.equals("/quit")){
 			return parseLadder;
 		}
 		else{
